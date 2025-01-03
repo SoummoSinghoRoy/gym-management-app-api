@@ -29,7 +29,11 @@ const traineeSchema = new Schema<ITrainee> ({
   weight: {
     type: String,
     required: true
-  }
+  },
+  classes:[{
+    type: Schema.Types.ObjectId,
+    ref: 'Class'
+  }]
 }, {
   timestamps: true
 })

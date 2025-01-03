@@ -17,6 +17,7 @@ interface ITrainee extends IUser {
   identityNumber: number;
   height: string;
   weight: string;
+  classes: ObjectId[];
 }
 
 interface ITrainer {
@@ -26,8 +27,12 @@ interface ITrainer {
   address: string;
 }
 
+type DaysofWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
+
 interface IClass {
   className: string;
+  day: DaysofWeek;
+  date: string;
   startTime: string;
   endTime: string;
   duration: number;
