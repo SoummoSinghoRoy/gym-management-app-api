@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config()
 
-import { EnvVariables } from '../Types/env_variables.types';
+import { EnvVariables } from '../types/env_variables.types';
 
 const env_variables: EnvVariables = {
   db_admin: process.env.DB_ADMIN || '',
