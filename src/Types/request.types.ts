@@ -16,3 +16,10 @@ export interface CustomRequest extends Request {
     role: string
   } | null
 }
+
+export interface TrainerCreateRequestBoy {
+  name: string;
+  email: string;
+  mobileNo: string;
+  address: string;
+}

@@ -1,8 +1,11 @@
-export interface UserApiResponse {
+export interface BasicApiResponse {
   success: boolean;
   statusCode: number;
   message: string;
   errorDetails?: { field: string; message: string;}[];
+}
+
+export interface UserApiResponse extends Partial<BasicApiResponse>{
   data?: {
     id: any;
     name: string;
@@ -21,3 +24,12 @@ export interface JwtResponse {
 }
 
 export interface AuthenticationResponse extends Partial<UserApiResponse> {}
+
+export interface TrainerApiResponse extends Partial<BasicApiResponse>{
+  data?: {
+    id: any;
+    name: string;
+    email: string;
+    mobileNo: string;
+  };
+}

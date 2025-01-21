@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
 import * as bcrypt from 'bcrypt';
-import { UserApiResponse } from "../../types/response.types";
-import signupValidation from "../validation/signup.validation";
+import { BasicApiResponse, UserApiResponse } from "../../types/response.types";
+import { userValidation } from "../validation/user.validation";
 import User from "../../model/User.model";
-import loginValidation from "../validation/login.validation";
 import { jwt_token } from "../../config/jwt.config";
 import { CustomRequest } from "../../types/request.types";
 
 export const signupPostController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password } = req.body;
-    const validation = await signupValidation({name, email, password});
+    const validation = await userValidation.signupValidation({name, email, password});
     if(!validation.isValid) {
-      const validationresult: UserApiResponse = {
+      const validationresult: BasicApiResponse = {
         success: false,
         statusCode: 400,
         message: 'Validation error occurred',
@@ -23,7 +22,7 @@ export const signupPostController = async (req: Request, res: Response): Promise
       bcrypt.hash(password, 8, async (err, hash) => {
         if(err) {
           console.log(err);
-          const response: UserApiResponse = {
+          const response: BasicApiResponse = {
             success: false,
             statusCode: 500,
             message: 'Error occurred, get back soon',
@@ -53,7 +52,7 @@ export const signupPostController = async (req: Request, res: Response): Promise
     }
   } catch (error) {
     console.log(error);
-    const response: UserApiResponse = {
+    const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
       message: 'Error occurred, get back soon'
@@ -65,10 +64,10 @@ export const signupPostController = async (req: Request, res: Response): Promise
 export const loginPostController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
-    const validation = await loginValidation({email, password});
+    const validation = await userValidation.loginValidation({email, password});
 
     if(!validation.isValid) {
-      const validationresult: UserApiResponse = {
+      const validationresult: BasicApiResponse = {
         success: false,
         statusCode: 400,
         message: 'Validation error occurred',
@@ -80,13 +79,12 @@ export const loginPostController = async (req: Request, res: Response): Promise<
       if(validUser) {
         const match = await bcrypt.compare(password, validUser.password);
         if(match) {
-          // will be implement jwt-authentication/OAuth
           const jwtResult = jwt_token.jwtSign({_id: validUser._id, name: validUser.name, email: validUser.email, role: validUser.role});
           if(jwtResult.statusCode === 200) {
             const response: UserApiResponse = {
               success: true,
               statusCode: jwtResult.statusCode,
-              message: `Successfuly loggedin`,
+              message: `Successfully loggedin`,
               token: 'Bearer ' + jwtResult.token,
               isAuthenticated: true
             }
@@ -101,7 +99,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
             res.json(response);
           }
         } else {
-          const validationresult: UserApiResponse = {
+          const validationresult: BasicApiResponse = {
             success: false,
             statusCode: 401,
             message: 'Incorrect password',
@@ -109,7 +107,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
           res.json(validationresult)
         }
       } else {
-        const validationresult: UserApiResponse = {
+        const validationresult: BasicApiResponse = {
           success: false,
           statusCode: 404,
           message: 'User not found',
@@ -119,7 +117,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
     }
   } catch (error) {
     console.log(error);
-    const response: UserApiResponse = {
+    const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
       message: 'Error occurred, get back soon'
@@ -141,7 +139,7 @@ export const logoutPostController = (req: Request, res: Response) => {
     res.json(response)
   } catch (error) {
     console.log(error);
-    const response: UserApiResponse = {
+    const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
       message: 'Error occurred, get back soon'

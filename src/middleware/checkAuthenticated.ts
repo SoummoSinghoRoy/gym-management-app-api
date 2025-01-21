@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-// import { jwtDecode } from 'jwt-decode';
 import { CustomRequest } from '../types/request.types';
 import { jwt_token } from '../config/jwt.config';
 import { AuthenticationResponse } from '../types/response.types';
@@ -21,6 +20,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
       next()
     } else {
       const response: AuthenticationResponse = {
+        success: false,
         statusCode: 403,
         message: 'Forbidden',
         isAuthenticated: false
@@ -29,6 +29,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     }
   } else {
     const response: AuthenticationResponse = {
+      success: false,
       statusCode: 401,
       message: 'UnAuthorized',
       isAuthenticated: false,
@@ -37,8 +38,36 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
   }
 }
 
-export const isNotAuthenticated = () => {}
+export const isNotAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
+  const token = req.headers['authorization']?.replace('Bearer ', '');
 
-export const isAdmin = () => {}
+  if(!token) {
+    next()
+  } else if(token) {
+    const response: AuthenticationResponse = {
+      success: false,
+      statusCode: 403,
+      message: 'Already loggedin',
+      isAuthenticated: true
+    }
+    res.json(response);
+  }
+
+}
+
+export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
+  const request = req as CustomRequest;
+
+  if(request.user?.role === 'admin') {
+    next()
+  } else {
+    const response: AuthenticationResponse = {
+      success: false,
+      statusCode: 403,
+      message: 'Not eligible to perform action'
+    }
+    res.json(response);
+  }
+}
 
 export const isTrainee = () => {}
