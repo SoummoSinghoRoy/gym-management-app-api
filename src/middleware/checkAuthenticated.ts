@@ -70,4 +70,17 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction): void =
   }
 }
 
-export const isTrainee = () => {}
+export const isTrainee = (req: Request, res: Response, next: NextFunction): void => {
+  const request = req as CustomRequest;
+
+  if(request.user?.role === 'trainee') {
+    next()
+  } else {
+    const response: AuthenticationResponse = {
+      success: false,
+      statusCode: 403,
+      message: 'Not eligible to perform action'
+    }
+    res.json(response);
+  }
+}

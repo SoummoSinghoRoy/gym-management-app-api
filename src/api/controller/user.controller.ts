@@ -40,7 +40,7 @@ export const signupPostController = async (req: Request, res: Response): Promise
             statusCode: 200,
             message: 'User successfully created',
             data: {
-              id: user._id,
+              _id: user._id,
               name: user.name,
               email: user.email,
               role: user.role

@@ -7,7 +7,7 @@ export interface BasicApiResponse {
 
 export interface UserApiResponse extends Partial<BasicApiResponse>{
   data?: {
-    id: any;
+    _id: any;
     name: string;
     email: string;
     role: string;
@@ -25,11 +25,14 @@ export interface JwtResponse {
 
 export interface AuthenticationResponse extends Partial<UserApiResponse> {}
 
+interface TrainerData {
+  _id: any;
+  name: string;
+  email: string;
+  mobileNo: string;
+  address?: string;
+}
+
 export interface TrainerApiResponse extends Partial<BasicApiResponse>{
-  data?: {
-    id: any;
-    name: string;
-    email: string;
-    mobileNo: string;
-  };
+  data?: TrainerData | TrainerData[]
 }

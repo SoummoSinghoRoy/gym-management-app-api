@@ -24,11 +24,41 @@ export const trainerCreatePostController = async (req: Request, res: Response): 
         statusCode: 200,
         message: 'Trainer successfully created',
         data: {
-          id: trainer._id,
+          _id: trainer._id,
           name: trainer.name,
           email: trainer.email,
           mobileNo: trainer.mobileNo
         }
+      }
+      res.json(response)
+    }
+  } catch (error) {
+    console.log(error);
+    const response: BasicApiResponse = {
+      success: false,
+      statusCode: 500,
+      message: 'Error occurred, get back soon'
+    }
+    res.json(response);
+  }
+}
+
+export const allTrainerGetController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const trainers = await Trainer.find();
+    if(trainers.length !== 0) {
+      const response: TrainerApiResponse = {
+        success: true,
+        statusCode: 200,
+        message: 'Trainer successfully retrieved',
+        data: trainers
+      }
+      res.json(response)
+    } else {
+      const response: BasicApiResponse = {
+        success: false,
+        statusCode: 404,
+        message: 'Trainers not found'
       }
       res.json(response)
     }
