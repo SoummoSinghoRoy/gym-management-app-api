@@ -1,62 +1,85 @@
 import validator from "validator";
-import { TrainerCreateRequestBoy } from "../../types/request.types";
-import { ValidationResult } from "../../types/validation.types";
+import { TrainerRequestBodyData } from "../../types/request.types";
+import { ErrorDetails, ValidationResult } from "../../types/validation.types";
 import Trainer from "../../model/Trainer.model";
 
 class TrainerValidation {
-  errorDetails: { field: string; message: string }[] = [];
+  private errorResult: ErrorDetails = [];
 
-  async trainerCreateValidation(createReqBody: TrainerCreateRequestBoy): Promise<ValidationResult> {
+  private trainerBaseValidation(trainerReqBody: TrainerRequestBodyData): ErrorDetails {
 
-    if(!createReqBody.name) {
-      this.errorDetails.push({
+    if(!trainerReqBody.name) {
+      this.errorResult.push({
         field: 'name',
         message: `Name can't be empty`
       });
     }
     
-    if(!createReqBody.email) {
-      this.errorDetails.push({
+    if(!trainerReqBody.email) {
+      this.errorResult.push({
         field: 'email',
         message: `Email can't be empty`
       });
-    } else if(!validator.isEmail(createReqBody.email)) {
-      this.errorDetails.push({
+    } else if(!validator.isEmail(trainerReqBody.email)) {
+      this.errorResult.push({
         field: 'email',
         message: `Invalid email format.`
       });
     }
 
-    if(!createReqBody.mobileNo) {
-      this.errorDetails.push({
+    if(!trainerReqBody.mobileNo) {
+      this.errorResult.push({
         field: 'mobileNo',
         message: `Mobile no can't be empty`
       });
     }
 
-    if(!createReqBody.address) {
-      this.errorDetails.push({
+    if(!trainerReqBody.address) {
+      this.errorResult.push({
         field: 'address',
         message: `Address can't be empty`
       });
     }
 
-    const existTrainer = await Trainer.findOne({email: createReqBody.email});
+    return this.errorResult
+  }
 
-    if(existTrainer) {
-      this.errorDetails.push({
-        field: 'email',
-        message: `Trainer already exist`
-      })
-    }
+  async trainerCreateValidation(createReqBody: TrainerRequestBodyData): Promise<ValidationResult> {
+    const baseValidationResult = this.trainerBaseValidation(createReqBody);
 
-    return {
-      errorDetails: this.errorDetails,
-      isValid: this.errorDetails.length === 0
+    if(baseValidationResult.length !== 0) {
+      this.errorResult = []
+      return {
+        errorDetails: baseValidationResult,
+        isValid: baseValidationResult.length === 0
+      }
+    } else {
+      const existTrainer = await Trainer.findOne({email: createReqBody.email});
+      if(existTrainer) {
+        this.errorResult.push({
+          field: 'email',
+          message: `Trainer already exist`
+        })
+      }
+      return {
+        errorDetails: this.errorResult,
+        isValid: this.errorResult.length === 0
+      }
     }
   }
 
-  trainerEditValidation() {}
+  async trainerEditValidation(updateReqBody: TrainerRequestBodyData): Promise<ValidationResult> {
+    const baseValidationResult = this.trainerBaseValidation(updateReqBody);
+    this.errorResult = []
+    return {
+      errorDetails: baseValidationResult.length !== 0 ? baseValidationResult : [],
+      isValid: baseValidationResult.length === 0
+    }
+  }
 }
 
 export const trainerValidation = new TrainerValidation();
+
+// modify jwt_config error handling response & update isAuthenticated middleware.
+// update trainer validation approach and done trainer edit validation.
+// update user validation approach.  

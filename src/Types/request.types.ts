@@ -17,7 +17,7 @@ export interface CustomRequest extends Request {
   } | null
 }
 
-export interface TrainerCreateRequestBoy {
+export interface TrainerRequestBodyData {
   name: string;
   email: string;
   mobileNo: string;

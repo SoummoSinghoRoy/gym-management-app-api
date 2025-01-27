@@ -1,7 +1,6 @@
+export type ErrorDetails = { field: string; message: string }[];
+
 export interface ValidationResult {
-  errorDetails: {
-    field: string;
-    message: string;
-  }[];
+  errorDetails: ErrorDetails;
   isValid: boolean;
 }

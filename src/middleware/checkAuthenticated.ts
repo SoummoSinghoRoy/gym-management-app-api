@@ -10,7 +10,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
   if(token) {
     const verificationresult = jwt_token.jwtVerify(token);
 
-    if (verificationresult) {
+    if (verificationresult.statusCode !== 401) {
       customReq.user = {
         id: verificationresult.decoded._id,
         name: verificationresult.decoded.name,
@@ -21,18 +21,18 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     } else {
       const response: AuthenticationResponse = {
         success: false,
-        statusCode: 403,
-        message: 'Forbidden',
-        isAuthenticated: false
+        statusCode: verificationresult.statusCode,
+        message: 'UnAuthorized! Please log in again.',
+        isAuthenticated: false,
       }
       res.json(response);
     }
   } else {
     const response: AuthenticationResponse = {
       success: false,
-      statusCode: 401,
-      message: 'UnAuthorized',
-      isAuthenticated: false,
+      statusCode: 403,
+      message: 'Forbidden',
+      isAuthenticated: false
     }
     res.json(response);
   }
@@ -52,7 +52,6 @@ export const isNotAuthenticated = (req: Request, res: Response, next: NextFuncti
     }
     res.json(response);
   }
-
 }
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
