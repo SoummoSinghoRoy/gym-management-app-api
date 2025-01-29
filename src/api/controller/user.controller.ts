@@ -25,7 +25,8 @@ export const signupPostController = async (req: Request, res: Response): Promise
           const response: BasicApiResponse = {
             success: false,
             statusCode: 500,
-            message: 'Error occurred, get back soon',
+            message: 'Internal server error',
+            errorDetails: 'Error occurred, get back soon'
           }
           res.json(response)
         } else {
@@ -55,7 +56,8 @@ export const signupPostController = async (req: Request, res: Response): Promise
     const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
-      message: 'Error occurred, get back soon'
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
     }
     res.json(response);
   }
@@ -103,6 +105,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
             success: false,
             statusCode: 401,
             message: 'Incorrect password',
+            errorDetails: 'Provide correct password'
           }
           res.json(validationresult)
         }
@@ -111,6 +114,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
           success: false,
           statusCode: 404,
           message: 'User not found',
+          errorDetails: 'User information not matched'
         }
         res.json(validationresult)
       }
@@ -120,7 +124,8 @@ export const loginPostController = async (req: Request, res: Response): Promise<
     const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
-      message: 'Error occurred, get back soon'
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
     }
     res.json(response);
   }
@@ -142,7 +147,8 @@ export const logoutPostController = (req: Request, res: Response) => {
     const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
-      message: 'Error occurred, get back soon'
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
     }
     res.json(response);
   }

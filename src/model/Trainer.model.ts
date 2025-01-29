@@ -4,7 +4,8 @@ import { ITrainer } from "../types/model.types";
 const trainerSchema = new Schema<ITrainer>({
   name: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   email: {
     type: String,

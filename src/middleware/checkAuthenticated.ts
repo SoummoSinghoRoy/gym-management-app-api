@@ -63,7 +63,8 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction): void =
     const response: AuthenticationResponse = {
       success: false,
       statusCode: 403,
-      message: 'Not eligible to perform action'
+      message: 'Unauthorized access.',
+      errorDetails: 'You must be an admin to perform this action.'
     }
     res.json(response);
   }
@@ -78,7 +79,8 @@ export const isTrainee = (req: Request, res: Response, next: NextFunction): void
     const response: AuthenticationResponse = {
       success: false,
       statusCode: 403,
-      message: 'Not eligible to perform action'
+      message: 'Unauthorized access.',
+      errorDetails: 'You must be an admin to perform this action.'
     }
     res.json(response);
   }

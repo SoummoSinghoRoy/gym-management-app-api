@@ -1,8 +1,10 @@
+import { ErrorDetails } from "./validation.types";
+
 export interface BasicApiResponse {
   success: boolean;
   statusCode: number;
   message: string;
-  errorDetails?: { field: string; message: string;}[];
+  errorDetails?: ErrorDetails | string;
 }
 
 export interface UserApiResponse extends Partial<BasicApiResponse>{

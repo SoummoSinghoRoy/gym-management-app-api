@@ -39,7 +39,8 @@ export const trainerCreatePostController = async (req: Request, res: Response): 
     const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
-      message: 'Error occurred, get back soon'
+      message: 'Internal server error',
+       errorDetails: 'Error occurred, get back soon'
     }
     res.json(response);
   }
@@ -69,7 +70,8 @@ export const allTrainerGetController = async (req: Request, res: Response): Prom
     const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
-      message: 'Error occurred, get back soon'
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
     }
     res.json(response);
   }
@@ -125,7 +127,74 @@ export const updateTrainerController = async (req: Request, res: Response): Prom
     const response: BasicApiResponse = {
       success: false,
       statusCode: 500,
-      message: 'Error occurred, get back soon'
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
+    }
+    res.json(response);
+  }
+}
+
+export const trainerDeleteController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { trainerId } = req.params;
+    const validTrainer = await Trainer.findById(trainerId);
+
+    if(validTrainer) {
+      await Trainer.deleteOne({_id: validTrainer._id});
+      const response: TrainerApiResponse = {
+        success: true,
+        statusCode: 200,
+        message: 'Trainer successfully deleted',
+      }
+      res.json(response)
+    } else {
+      const response: BasicApiResponse = {
+        success: false,
+        statusCode: 404,
+        message: 'Trainer not valid'
+      }
+      res.json(response);
+    }
+  } catch (error) {
+    console.log(error);
+    const response: BasicApiResponse = {
+      success: false,
+      statusCode: 500,
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
+    }
+    res.json(response);
+  }
+}
+
+export const trainerSearchController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { searchTerm } = req.params;
+    const trainer = await Trainer.find({ name: { $regex: searchTerm, $options: 'i' } });
+    
+    if(trainer.length === 0) {
+      const response: BasicApiResponse = {
+        success: false,
+        statusCode: 404,
+        message: 'Trainer not found'
+      }
+      res.json(response);
+    } else {
+      const response: TrainerApiResponse = {
+        success: true,
+        statusCode: 200,
+        message: 'Trainer successfully retrieved',
+        data: trainer
+      }
+      res.json(response)
+    } 
+  } catch (error) {
+    console.log(error);
+    const response: BasicApiResponse = {
+      success: false,
+      statusCode: 500,
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
     }
     res.json(response);
   }
