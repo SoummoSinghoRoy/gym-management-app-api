@@ -32,10 +32,8 @@ type DaysofWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | '
 interface IClass {
   className: string;
   day: DaysofWeek;
-  date: string;
-  startTime: string;
-  endTime: string;
-  duration: number;
+  time: string;
+  duration: string;
   trainer: ObjectId;
   trainees: ObjectId[];
 }

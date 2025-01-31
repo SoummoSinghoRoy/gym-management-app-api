@@ -38,3 +38,16 @@ interface TrainerData {
 export interface TrainerApiResponse extends Partial<BasicApiResponse>{
   data?: TrainerData | TrainerData[]
 }
+
+interface ClassData {
+  _id: any;
+  className: string;
+  day: string;
+  time: string;
+  duration: string;
+  trainer: object;
+}
+
+export interface ClassApiResponse extends Partial<BasicApiResponse> {
+  data?: ClassData | ClassData[]
+}

@@ -11,25 +11,18 @@ const classSchema = new Schema<IClass>({
     required: true,
     enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   },
-  date: {
-    type: String,
-    required: true
-  },
-  startTime: {
-    type: String,
-    required: true
-  },
-  endTime: {
+  time: {
     type: String,
     required: true
   },
   duration: {
-    type: Number,
-    required: true
+    type: String,
+    default: '2h'
   },
   trainer: {
     type: Schema.Types.ObjectId,
-    ref: 'Trainer'
+    ref: 'Trainer',
+    index: true
   },
   trainees: [{
     type: Schema.Types.ObjectId,
