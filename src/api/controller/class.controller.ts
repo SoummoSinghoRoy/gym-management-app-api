@@ -63,3 +63,35 @@ export const classCreatePostController = async (req: Request, res: Response): Pr
     res.json(response);
   }
 }
+
+export const allClassGetController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const allClasses = await Class.find().populate('trainer', '_id name email').exec();
+
+    if(allClasses.length !== 0) {
+      const response: ClassApiResponse = {
+        success: true,
+        statusCode: 200,
+        message: 'Class successfully retrieved',
+        data: allClasses
+      }
+      res.json(response)
+    } else {
+      const response: BasicApiResponse = {
+        success: false,
+        statusCode: 404,
+        message: 'Classes not found'
+      }
+      res.json(response)
+    }
+  } catch (error) {
+    console.log(error);
+    const response: BasicApiResponse = {
+      success: false,
+      statusCode: 500,
+      message: 'Internal server error',
+      errorDetails: 'Error occurred, get back soon'
+    }
+    res.json(response);
+  }
+}
